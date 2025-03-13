@@ -68,5 +68,99 @@ export default defineSchema({
     })
         .index("type", ["type"])
         .index("polarEventId", ["polarEventId"]),
-
+    
+    // New tables for social media automation
+    integrations: defineTable({
+        userId: v.string(),
+        platformId: v.string(),
+        platformName: v.string(),
+        accessToken: v.string(),
+        refreshToken: v.optional(v.string()),
+        tokenExpiry: v.optional(v.number()),
+        metadata: v.optional(v.any()),
+        createdAt: v.string(),
+        updatedAt: v.string(),
+        isActive: v.boolean(),
+    })
+        .index("by_user", ["userId"])
+        .index("by_platform", ["platformId"])
+        .index("by_user_and_platform", ["userId", "platformId"]),
+    
+    agents: defineTable({
+        userId: v.string(),
+        name: v.string(),
+        description: v.string(),
+        instructions: v.string(),
+        model: v.string(),
+        temperature: v.number(),
+        isActive: v.boolean(),
+        createdAt: v.string(),
+        updatedAt: v.string(),
+        metadata: v.optional(v.any()),
+    })
+        .index("by_user", ["userId"])
+        .index("by_active", ["userId", "isActive"]),
+    
+    automations: defineTable({
+        userId: v.string(),
+        name: v.string(),
+        description: v.string(),
+        integrationId: v.optional(v.id("integrations")),
+        agentId: v.optional(v.id("agents")),
+        flowData: v.any(), // React Flow data structure
+        isActive: v.boolean(),
+        schedule: v.optional(v.string()),
+        createdAt: v.string(),
+        updatedAt: v.string(),
+        metadata: v.optional(v.any()),
+    })
+        .index("by_user", ["userId"])
+        .index("by_integration", ["integrationId"])
+        .index("by_agent", ["agentId"])
+        .index("by_active", ["userId", "isActive"]),
+    
+    faqs: defineTable({
+        userId: v.string(),
+        question: v.string(),
+        answer: v.string(),
+        agentId: v.optional(v.id("agents")),
+        keywords: v.array(v.string()),
+        category: v.optional(v.string()),
+        isActive: v.boolean(),
+        createdAt: v.string(),
+        updatedAt: v.string(),
+    })
+        .index("by_user", ["userId"])
+        .index("by_agent", ["agentId"])
+        .index("by_active", ["userId", "isActive"]),
+    
+    updates: defineTable({
+        userId: v.string(),
+        title: v.string(),
+        content: v.string(),
+        category: v.optional(v.string()),
+        isActive: v.boolean(),
+        scheduledAt: v.optional(v.string()),
+        publishedAt: v.optional(v.string()),
+        createdAt: v.string(),
+        updatedAt: v.string(),
+    })
+        .index("by_user", ["userId"])
+        .index("by_active", ["userId", "isActive"]),
+    
+    messages: defineTable({
+        userId: v.string(),
+        integrationId: v.id("integrations"),
+        automationId: v.optional(v.id("automations")),
+        platformId: v.string(),
+        externalMessageId: v.string(),
+        direction: v.string(), // 'incoming' or 'outgoing'
+        content: v.string(),
+        metadata: v.optional(v.any()),
+        createdAt: v.string(),
+    })
+        .index("by_user", ["userId"])
+        .index("by_integration", ["integrationId"])
+        .index("by_external_id", ["externalMessageId"])
+        .index("by_automation", ["automationId"]),
 })

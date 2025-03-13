@@ -3,10 +3,14 @@
 import clsx from 'clsx'
 import {
   Banknote,
-  Folder,
   HomeIcon,
   Settings,
-  LucideIcon
+  LucideIcon,
+  Link as LinkIcon,
+  BrainCircuit,
+  Bot,
+  HelpCircle,
+  GitBranch
 } from "lucide-react"
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -22,6 +26,26 @@ const navItems: NavItem[] = [
     label: "Overview",
     href: "/dashboard",
     icon: HomeIcon
+  },
+  {
+    label: "Integrations",
+    href: "/dashboard/integrations",
+    icon: LinkIcon
+  },
+  {
+    label: "Automations",
+    href: "/dashboard/automations",
+    icon: GitBranch
+  },
+  {
+    label: "Agents",
+    href: "/dashboard/agents",
+    icon: Bot
+  },
+  {
+    label: "FAQs & Updates",
+    href: "/dashboard/faqs-updates",
+    icon: HelpCircle
   },
   {
     label: "Finance",
@@ -43,7 +67,7 @@ export default function DashboardSideBar() {
       <div className="flex h-full flex-col">
         <div className="flex h-[3.45rem] items-center border-b px-4">
           <Link prefetch={true} className="flex items-center gap-2 font-semibold hover:cursor-pointer" href="/">
-            <span>Nextjs Starter Kit</span>
+            <span>Social Automation</span>
           </Link>
         </div>
 
